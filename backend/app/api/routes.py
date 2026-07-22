@@ -214,3 +214,35 @@ async def upsert_user_history(
     except Exception:
         return {"status": "ok"}
 
+@router.delete("/user/history")
+async def clear_user_history(
+    item_type: Optional[str] = Query(None),
+    user_id: str = Depends(get_current_user_id)
+):
+    """
+    Clears user history (optionally filtered by item_type).
+    """
+    try:
+        query = supabase.table("user_history").delete().eq("user_id", user_id)
+        if item_type:
+            query = query.eq("item_type", item_type)
+        query.execute()
+        return {"status": "ok"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete("/user/history/{item_type}/{item_id}")
+async def delete_user_history_item(
+    item_type: str,
+    item_id: str,
+    user_id: str = Depends(get_current_user_id)
+):
+    """
+    Deletes a specific user history item.
+    """
+    try:
+        supabase.table("user_history").delete().eq("user_id", user_id).eq("item_type", item_type).eq("item_id", item_id).execute()
+        return {"status": "ok"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+

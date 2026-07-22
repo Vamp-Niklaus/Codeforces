@@ -2,73 +2,23 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { History, FileCode, Trophy, Trash2, X, ExternalLink, ArrowRight } from "lucide-react";
 
-interface ProblemHistoryItem {
-  problemId: string;
-  contestId: number;
-  index: string;
-  name: string;
-  rating?: number;
-  lastOpened: number;
-}
-
-interface ContestHistoryItem {
-  id: number;
-  name: string;
-  lastOpened: number;
-}
+import { useUserHistory } from "../hooks/useUserHistory";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"PROBLEMS" | "CONTESTS">("PROBLEMS");
 
-  // Load problem history from localStorage
-  const [problemHistory, setProblemHistory] = useState<ProblemHistoryItem[]>(() => {
-    try {
-      const saved = localStorage.getItem("cf_problem_history");
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  const { 
+    problemHistory, 
+    contestHistory, 
+    deleteHistoryItem, 
+    clearHistory 
+  } = useUserHistory();
 
-  // Load contest history from localStorage
-  const [contestHistory, setContestHistory] = useState<ContestHistoryItem[]>(() => {
-    try {
-      const saved = localStorage.getItem("cf_contest_history");
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  // Dismiss a single problem entry
-  const handleDismissProblem = (problemId: string) => {
-    setProblemHistory((prev) => {
-      const updated = prev.filter((item) => item.problemId !== problemId);
-      localStorage.setItem("cf_problem_history", JSON.stringify(updated));
-      return updated;
-    });
-  };
-
-  // Dismiss a single contest entry
-  const handleDismissContest = (contestId: number) => {
-    setContestHistory((prev) => {
-      const updated = prev.filter((item) => item.id !== contestId);
-      localStorage.setItem("cf_contest_history", JSON.stringify(updated));
-      return updated;
-    });
-  };
-
-  // Clear all problem history
-  const handleClearProblemHistory = () => {
-    setProblemHistory([]);
-    localStorage.removeItem("cf_problem_history");
-  };
-
-  // Clear all contest history
-  const handleClearContestHistory = () => {
-    setContestHistory([]);
-    localStorage.removeItem("cf_contest_history");
-  };
+  const handleDismissProblem = (problemId: string) => deleteHistoryItem({ type: "PROBLEM", id: problemId });
+  const handleDismissContest = (contestId: number) => deleteHistoryItem({ type: "CONTEST", id: contestId.toString() });
+  
+  const handleClearProblemHistory = () => clearHistory("PROBLEM");
+  const handleClearContestHistory = () => clearHistory("CONTEST");
 
   const formatDate = (ms: number) => {
     if (!ms) return "Recently";
@@ -157,7 +107,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-3">
-                {problemHistory.map((item) => (
+                {problemHistory.map((item: any) => (
                   <div
                     key={item.problemId}
                     className="glass-card p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-blue-500/40 transition-all group"
@@ -248,7 +198,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-3">
-                {contestHistory.map((item) => (
+                {contestHistory.map((item: any) => (
                   <div
                     key={item.id}
                     className="glass-card p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-blue-500/40 transition-all group"

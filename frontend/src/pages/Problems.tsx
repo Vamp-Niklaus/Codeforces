@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams, Link } from "react-router-dom";
 import { api } from "../lib/api";
+import { useUserHistory } from "../hooks/useUserHistory";
 import ViewSolutionModal from "../components/ViewSolutionModal";
 import {
   Search, Star, CheckCircle, Circle, Tag, HelpCircle,
@@ -79,25 +80,17 @@ export default function Problems() {
     setCurrentPage(1);
   }, [search, selectedTags, minRating, maxRating, statusFilter, cfHandle]);
 
-  // Record opened contest to localStorage history
+  const { recordContestView } = useUserHistory();
+
+  // Record opened contest to history
   useEffect(() => {
     if (contestIdParam) {
-      try {
-        const cId = parseInt(contestIdParam);
-        if (!isNaN(cId)) {
-          const saved = localStorage.getItem("cf_contest_history");
-          const list = saved ? JSON.parse(saved) : [];
-          const filtered = list.filter((item: any) => item.id !== cId);
-          const newItem = {
-            id: cId,
-            name: `Codeforces Contest #${cId}`,
-            lastOpened: Date.now(),
-          };
-          const updated = [newItem, ...filtered].slice(0, 50);
-          localStorage.setItem("cf_contest_history", JSON.stringify(updated));
-        }
-      } catch (err) {
-        console.error("Failed to update contest history", err);
+      const cId = parseInt(contestIdParam);
+      if (!isNaN(cId)) {
+        recordContestView({
+          id: cId,
+          name: `Codeforces Contest #${cId}` // Ideally pass real name, but keeping existing fallback
+        });
       }
     }
   }, [contestIdParam]);

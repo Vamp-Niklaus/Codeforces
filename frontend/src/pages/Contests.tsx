@@ -18,11 +18,7 @@ interface Contest {
   relativeTimeSeconds: number;
 }
 
-interface ContestHistoryItem {
-  id: number;
-  name: string;
-  lastOpened: number;
-}
+import { useUserHistory } from "../hooks/useUserHistory";
 
 export default function Contests() {
   const [activePhaseTab, setActivePhaseTab] = useState<"FINISHED" | "BEFORE" | "CODING">("FINISHED");
@@ -32,15 +28,7 @@ export default function Contests() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // Local storage history and bookmarks states
-  const [history, setHistory] = useState<ContestHistoryItem[]>(() => {
-    try {
-      const saved = localStorage.getItem("cf_contest_history");
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  const { contestHistory: history, recordContestView, clearHistory } = useUserHistory();
 
   const [bookmarks, setBookmarks] = useState<number[]>(() => {
     try {
@@ -50,16 +38,6 @@ export default function Contests() {
       return [];
     }
   });
-
-  // Save history item when user opens a contest
-  const recordContestView = (contest: { id: number; name: string }) => {
-    setHistory((prev) => {
-      const filtered = prev.filter((item) => item.id !== contest.id);
-      const updated = [{ id: contest.id, name: contest.name, lastOpened: Date.now() }, ...filtered];
-      localStorage.setItem("cf_contest_history", JSON.stringify(updated.slice(0, 50)));
-      return updated;
-    });
-  };
 
   // Toggle Bookmark
   const toggleBookmark = (e: React.MouseEvent, contestId: number) => {
@@ -231,8 +209,7 @@ export default function Contests() {
             </h2>
             <button
               onClick={() => {
-                setHistory([]);
-                localStorage.removeItem("cf_contest_history");
+                clearHistory("CONTEST");
               }}
               className="text-xs text-rose-500 hover:underline font-semibold"
             >
@@ -248,7 +225,7 @@ export default function Contests() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {history.map((item) => (
+              {history.map((item: any) => (
                 <div
                   key={item.id}
                   className="glass-card p-4 rounded-xl border flex flex-col justify-between"

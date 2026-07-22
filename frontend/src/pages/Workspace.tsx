@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Editor from "@monaco-editor/react";
 import { api } from "../lib/api";
+import { useUserHistory } from "../hooks/useUserHistory";
 import { useTheme } from "../context/ThemeContext";
 import { 
   ArrowLeft, Star, CheckCircle, Circle, Copy, Check, 
@@ -81,26 +82,17 @@ export default function Workspace() {
   const problemId = `${contestId}-${index}`;
   const cfProblemUrl = `https://codeforces.com/contest/${contestId}/problem/${index}`;
 
-  // Record opened problem to localStorage history
+  const { recordProblemView } = useUserHistory();
+
+  // Record opened problem to history
   useEffect(() => {
     if (contestId && index) {
-      try {
-        const saved = localStorage.getItem("cf_problem_history");
-        const list = saved ? JSON.parse(saved) : [];
-        const pId = `${contestId}-${index}`;
-        const filtered = list.filter((item: any) => item.problemId !== pId);
-        const newItem = {
-          problemId: pId,
-          contestId: parseInt(contestId),
-          index: index,
-          name: `Problem ${contestId}-${index}`,
-          lastOpened: Date.now(),
-        };
-        const updated = [newItem, ...filtered].slice(0, 50);
-        localStorage.setItem("cf_problem_history", JSON.stringify(updated));
-      } catch (err) {
-        console.error("Failed to update problem history", err);
-      }
+      recordProblemView({
+        problemId: `${contestId}-${index}`,
+        contestId: parseInt(contestId),
+        index: index,
+        name: `Problem ${contestId}-${index}` // Ideally we'd pass actual problem name if available, but keeping existing behavior
+      });
     }
   }, [contestId, index]);
 
