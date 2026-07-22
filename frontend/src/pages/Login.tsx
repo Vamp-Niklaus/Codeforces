@@ -43,6 +43,8 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
+  };
+
   const handleResetPassword = async () => {
     if (!email) {
       setError("Please enter your email address first.");
