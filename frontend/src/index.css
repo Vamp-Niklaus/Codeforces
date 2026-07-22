@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-main: #f4f6f9;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f8fafc;
+    --border-color: #e2e8f0;
+    --text-primary: #1e293b;
+    --text-muted: #64748b;
+    --cf-blue: #3b5998;
+  }
+
+  html.dark {
+    --bg-main: #030712;
+    --bg-card: rgba(17, 24, 39, 0.7);
+    --bg-card-hover: rgba(31, 41, 55, 0.7);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --text-primary: #f9fafb;
+    --text-muted: #9ca3af;
+    --cf-blue: #38bdf8;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+  }
+}
+
+/* Glassmorphism & Theme Cards */
+.glass {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+}
+
+.glass-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+}
+
+.glass-card:hover {
+  background-color: var(--bg-card-hover);
+}
+
+/* Codeforces Status Verdict Styling */
+.verdict-ok {
+  color: #008000 !important;
+  font-weight: 700;
+}
+
+.verdict-wa {
+  color: #ff0000 !important;
+  font-weight: 700;
+}
+
+.verdict-tle {
+  color: #c00000 !important;
+  font-weight: 700;
+}
+
+.verdict-mle {
+  color: #000000 !important;
+  font-weight: 700;
+}
+
+html.dark .verdict-ok {
+  color: #4ade80 !important;
+}
+html.dark .verdict-wa {
+  color: #f87171 !important;
+}
+html.dark .verdict-tle {
+  color: #fb923c !important;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+}
+
+/* Problem Statement Theme Support */
+.problem-statement {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.problem-statement .header {
+  border-bottom: 1px solid var(--border-color) !important;
+  margin-bottom: 1.5rem !important;
+  padding-bottom: 1rem !important;
+  text-align: left !important;
+}
+
+.problem-statement .header .title {
+  color: var(--text-primary) !important;
+  font-weight: 700 !important;
+  font-size: 1.75rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.problem-statement .header .time-limit,
+.problem-statement .header .memory-limit,
+.problem-statement .header .input-file,
+.problem-statement .header .output-file {
+  color: var(--text-muted) !important;
+  font-size: 0.875rem !important;
+  margin-top: 0.25rem !important;
+}
+
+.problem-statement .header .property-title {
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+}
+
+.problem-statement h1,
+.problem-statement h2,
+.problem-statement h3,
+.problem-statement h4,
+.problem-statement h5,
+.problem-statement h6 {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.problem-statement .section-title {
+  font-size: 1.25rem !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding-bottom: 0.25rem !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.problem-statement p {
+  line-height: 1.625 !important;
+  margin-bottom: 1rem !important;
+}
+
+.problem-statement pre {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 0.375rem !important;
+  padding: 0.75rem !important;
+  color: var(--text-primary) !important;
+  font-family: monospace !important;
+}
+
+html.dark .problem-statement pre {
+  background: rgba(15, 23, 42, 0.8) !important;
+}
+
+.problem-statement .sample-tests .sample-test {
+  border: 1px solid var(--border-color) !important;
+  margin-bottom: 1rem !important;
+  border-radius: 0.375rem !important;
+  overflow: hidden !important;
+}
+
+.problem-statement .sample-tests .input,
+.problem-statement .sample-tests .output {
+  padding: 0.75rem !important;
+  background: rgba(0, 0, 0, 0.02) !important;
+  font-family: monospace !important;
+}
+
+html.dark .problem-statement .sample-tests .input,
+html.dark .problem-statement .sample-tests .output {
+  background: rgba(15, 23, 42, 0.4) !important;
+}
+
+.problem-statement .sample-tests .title {
+  font-size: 0.75rem !important;
+  text-transform: uppercase !important;
+  color: #2563eb !important;
+  font-weight: 700 !important;
+}
+
+html.dark .problem-statement .sample-tests .title {
+  color: #38bdf8 !important;
+}
